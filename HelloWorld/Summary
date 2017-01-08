@@ -1,0 +1,74 @@
+IoC - Предлагает простой механизм для предоставления зависимостей (колабораторов) компонента (зависимый объект,
+целевой объект), а также для управления ависимостями в течение жизненного цикла компонента.
+IoC: два типа - Dependency Inversion и Dependency Lookup.
+В случае IoC в стиле DL компонент должен получить ссылку на зависимость, тогда как в стиле DI зависимость внедряется в
+компонент контейнером IoC.
+DI принимает две формы - Constructor DI и Setter DI.
+DL принимает две формы - Dependency Pull и Contextualized Dependency Injection.
+Dependency Pull - зависимости извлекаются из реестра - JNDI. В Spring это реализовывается след образом:
+BeanFactory factory = getBeanFactory();
+MessageRenderer mr = (MessageRenderer) factory.getBean("renderer");
+Contextualized Dependency Lookup - поиск зависимости осуществляется в контейнере, а не в реестре.
+Constructor DI - тип внедрения зависимостей, когда зависимости предоставляются компоненту в его конструкторе.
+Компонент объявляет конструктор, который получает в каческе аргументов его зависимости, и контейнер IoC передает
+зависимости при создании экземпляра.
+Setter DI - контейнер внедряет зависимости компонента через сеттеры в стиле JavaBean.
+Очевидно, надо использовать DI, потому как только он проще и только он обеспечивает независимость от контейнера.
+Опр-ние: бином в спринге называется объект, который управляется IoC-контейнером. Не обязательно он удовлетворяет
+правилам для JavaBean.
+--------------------------------------------------------------------------------------------------------------------
+Введение в Spring с точки зрения разработчика
+BeanFactory - самый верзний интерфейс, предоставляющий возможности получить бин. Получив экземпляр типа BeanFactory
+и сконфигурировав его, приложение может получать доступ к бинам. Конфигурация часто производится автоматически,
+например ApplicationContext будет загружаться веб-контейнером. Но иногда приходится самолично конфигурировать его.
+Наиболее распростарнен подход с внешним конфигурированием (в противовес программному).
+
+ApplicationContext - расширение BeanFactory. Помимо служб DI, предлагает другие службы такие как AOP, служба транзакций,
+обработка событий и тд. Конфигурация ApplicationContext может быть автоматической (веб-контейнер через
+ContextLoaderListener), либо ручной - через xml, через Java-аннотации, либо через property-файл. Если имеют место два
+объявления - через xml и через аннотации, то xml перекроет аннотации.
+Для использования поддержки аннотаций необходимо поместить в xml-файл конфигурации дескрипторы:
+<beans xmlns:context="http://www.springframework.org/schema/context" ...>
+    <context:annotation-config/>
+    <context:conponent-scan base-package:"com.kraynov" />
+Эти дескрипторы сообщают Spring о необходимости сканирования кода на предмет поиска внедряемых бинов. В соответствующих
+пакетах, нужно пометить необходимые классы аннотаций @Service("<id of bean>"):
+    @Service("messageRenderer")
+    public class StandartOutMessageRenderer
+
+В случае конфигурации через xml используются другие дескрипторы - bean:
+<beans ....>
+    <bean id="messageRenderer" class="com.kraynov...." />
+    <bean id="messageProvider" class="com.kraynov...." />
+
+Внедрение через метод установки:
+XML - добавляется тег property и либо ref либо value - первый для бинов, второй для небинов:
+<bean id="messageRenderer" class="com.kraynov...." />
+        <property name="messageProvider">
+        <ref bean="messageProvider"/>
+        </property>
+</bean>
+Аннотации - сеттер помечается аннотацией @Autowired либо @Resource(name="messageProvider"):
+    @Service("messageRenderer")
+    public class StandartOutMessageRenderer implements messageRenderer
+...
+    @Autowired
+    public void setMessageProvider(MessageProvider provider){...}
+
+Внедрение через конструктор:
+XML - добавляется тег constructor-arg:
+    <bean id="messageProvider" class="com.... ConfigurableMessageProvider">
+        <constructor-arg type="String">
+            <value>This is a configurable message in xml</value>
+        </constructor-arg>
+    </bean>
+Либо так:
+<bean id="messageProvider" class="com.... ConfigurableMessageProvider"
+      c:message="This is a configurable message"/>
+Аннотации - конструктор помечается аннотацией @Autowired:
+    @Autowired
+    public ConfigurableMessageProvider(String message) {
+        this.message = message;
+    }
+
+

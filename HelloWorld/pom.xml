@@ -35,6 +35,7 @@
                 </executions>
                 <configuration>
                     <mainClass>com.kraynov.example.messages.DeclareSpringComponents</mainClass>
+                    <mainClass>com.kraynov.example.messages.AnnotationSpringComponents</mainClass>
                 </configuration>
             </plugin>
         </plugins>

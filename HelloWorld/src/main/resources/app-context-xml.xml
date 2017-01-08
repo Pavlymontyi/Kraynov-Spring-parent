@@ -5,10 +5,15 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-    <bean id="messageProvider" class="com.kraynov.example.messages.HelloWorldMessageProvider"/>
+    <bean id="messageProvider" class="com.kraynov.example.messages.ConfigurableMessageProvider">
+        <constructor-arg type="String">
+            <value>This is a configurable message</value>
+        </constructor-arg>
+    </bean>
     <bean id="messageRenderer" class="com.kraynov.example.messages.StandartOutMessageRenderer">
         <property name="messageProvider">
             <ref bean="messageProvider"/>
         </property>
     </bean>
+
 </beans>
