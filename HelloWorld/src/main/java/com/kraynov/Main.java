@@ -1,4 +1,4 @@
-package  com.kraynov;
+package com.kraynov;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -9,7 +9,9 @@ public class Main {
         ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
         HelloWorld obj = (HelloWorld) context.getBean("helloWorld");
 
-        System.out.println("Hello world: java");
-        obj.getMessage();
+        HelloWorldFromAuthor pakr = context.getBean("helloWorldFromPakr", HelloWorldFromAuthor.class);
+        System.out.println("Spring test: Looks good");
+        obj.printMessage();
+        pakr.printMessage();
     }
 }
