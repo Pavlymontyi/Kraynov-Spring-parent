@@ -31,22 +31,31 @@ com.kraynov.ch5.propeditors.*
        доп. интерфесы жизненного цикла;
        улучшенное автоматическое конфигурирование компонент инфраструктуры.
 
- Интернационализация с помощью интерфейса MessageSource
+ Интернационализация с помощью интерфейса MessageSource - com.kraynov.ch5.context.MessageSourceDemo
   Используя интерфейс org.springframework.context.MessageSource приложение может получить доступ к строковым ресурсам,
   называемым сообщениями, которые сохранены для множества разных языков. Чтобы получить поддержку MessageSource,
   предлагаемую ApplicationContext, в конфигурации понадобится определить бин типа MessageSource с именем messageSource.
   Простейший пример использования приведен в классе MessageSourceDemo.
-  События приложений
+ События приложений - com.kraynov.ch5.event.*
   ApplicationContext можно использовать в качестве брокера сообщений. Событие это класс, производный от ApplicationEvent,
   который сам является производным от java.util.EventObject. Любой бин может прослушивать события, реализовав интерфейс
-  ApplicationListener<T>, причем его не нужно регистрировать в ApplicationContext, это делается аматоматически.
+  ApplicationListener<T>, причем его не нужно регистрировать в ApplicationContext, это делается автоматически (а в других контекстах что??). В
+  интерфейсе ApplicationListener определен лишь один метод onApplicationEvent(T event), который вызывается в момент,
+  когда событие сгенерировано.
+  Пояснение примера в com.kraynov.ch5.event.*: клиент получает ссылку на бин publisher и посылает запрос на публикацию
+  сообщения. Publisher реализует интерфейс ApplicationContextAware, поэтому имеет ссылку на экземпляр ApplicationContext.
+  Ему и делегируется запрос на публикацию конкретного ApplicationEvent. ApplicationContext имеет доступ к
+  зарегистрированным листенерам. По типу ApplicationEvent он определяет листенеры, которые должны отреагировать на публикацию.
+ Доступ к ресурсам - com.kraynov.ch5.resource.ResourceDemo
+  Spring предоставляет унифицированный механизм для доступа к разного рода ресурсам независимо от протокола доступа, и
+  от того, где он находится - в файловой системе, в classpath или на удаленном сервере.
+  Интерфейс org.springframework.core.io.Resource является ключевым. Основные реализации - FileSystemResource, UrlResource,
+  ClassPathResource. Для поиска и создания экземпляров Resource платформа использует другой интерфейс ResourceLoader и
+  его стандартную имплементацию DefaultResourceLoader. Обычно достаточно использовать ApplicationContext в качестве
+  реализации ResourceLoader.
 
- Доступ к ресурсам - com.kraynov.ch5.event.*
-  Spring предоставляет унифицированный механизм для доступа к разного рода ресурсам независимо от протокола доступа.
+Конфигурация, используюзая Java-классы
+  Кроме XML для конфигурирования ApplicationContext можно использовать Java-классы.
+ Конфигурирование ApplicationContext в Java
 
- Events - поправить
 
-  Пояснение примера: клиент получает ссылку на бин publisher и посылает запрос на публикацию сообщения. Publisher
-  реализует интерфейс ApplicationContextAware, поэтому имеет ссылку на экземпляр ApplicationContext. Ему и делегируется
-  запрос на публикацию конкретного ApplicationEvent. ApplicationContext имеет доступ к зарегистрированным листенерам. По
-  типу ApplicationEvent он определяет листенеры, которые должны отреагировать на публикацию.

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <bean id="messageProvider" class="com.kraynov.ch5.javaconfig.ConfigurableMessageProvider">
+        <property name="message" value="This is configured message. It's need to be rendered"/>
+    </bean>
+
+    <bean id="messageRenderer" class="com.kraynov.ch5.javaconfig.StandartOutMessageRenderer">
+        <property name="messageProvider" ref="messageProvider"/>
+    </bean>
+
+
+</beans>

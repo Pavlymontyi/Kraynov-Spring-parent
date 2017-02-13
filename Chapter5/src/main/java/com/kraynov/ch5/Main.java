@@ -1,8 +1,10 @@
 package com.kraynov.ch5;
 
 import com.kraynov.ch5.event.Publisher;
+import com.kraynov.ch5.javaconfig.JavaConfigSimpleExample;
 import com.kraynov.ch5.propeditors.CustomEditorExample;
 import com.kraynov.ch5.propeditors.PropertyEditorBean;
+import com.kraynov.ch5.resource.ResourceDemo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
@@ -30,5 +32,13 @@ public class Main {
         Publisher pub = (Publisher) ctx3.getBean("publisher");
         pub.publish("Hello from publishing bean");
         pub.publishChild("Bla-bla");
+
+        //Доступ к ресурсам
+        ResourceDemo.main(null);
+
+        //Конфигурирование ApplicationContext в Java-классе
+        JavaConfigSimpleExample.main(null);
     }
+
+
 }
