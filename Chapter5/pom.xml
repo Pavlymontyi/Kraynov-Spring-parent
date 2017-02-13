@@ -2,37 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>Kraynov-Spring-parent</artifactId>
+        <groupId>Kraynov-Spring-parent</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>Kraynov-Spring-parent</groupId>
-    <artifactId>Kraynov-Spring-parent</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>HelloWorld</module>
-        <module>Chapter5</module>
-    </modules>
-
-    <properties>
-        <spring-version>3.1.4.RELEASE</spring-version>
-    </properties>
-    <dependencies>
-      <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring-version}</version>
-        </dependency>
-    </dependencies>
+    <artifactId>Chapter5</artifactId>
 
     <build>
         <plugins>
@@ -57,10 +34,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.kraynov.Main</mainClass>
+                    <mainClass>com.kraynov.ch5.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>
