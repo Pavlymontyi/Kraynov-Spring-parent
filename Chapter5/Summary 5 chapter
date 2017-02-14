@@ -54,8 +54,37 @@ com.kraynov.ch5.propeditors.*
   его стандартную имплементацию DefaultResourceLoader. Обычно достаточно использовать ApplicationContext в качестве
   реализации ResourceLoader.
 
-Конфигурация, используюзая Java-классы
+Конфигурация, используюзая Java-классы - com.kraynov.ch5.javaconfig.*
   Кроме XML для конфигурирования ApplicationContext можно использовать Java-классы.
  Конфигурирование ApplicationContext в Java
+  Класс com.kraynov.ch5.javaconfig.AppConfig является простейшей реализацией конфигурирования AC через Java-классы.
+  Рассмотрим, какие аннотации применяются в этом классе.
+
+      @Configuration //применяется к типу, сообщает платформе Spring о том, что это конфигурационный файл, основанный на java.
+      public class AppConfig {
+
+      @Bean //применяется к методам, а также к ANNOTATION_TYPE, эквивалентна декскриптору <bean>
+      //Вызов render.setMessageProvider(messageProvider()) эквивалентен применению дескриптора <ref>
+      //XML
+      // <bean id="messageRenderer" class="com.kraynov.ch5.javaconfig.StandartOutMessageRenderer">
+      //     <property name="messageProvider" ref="messageProvider"/>
+      // </bean>
+      public MessageRenderer messageRenderer(){
+        ...
+        render.setMessageProvider(messageProvider());
+        ...
+      }
+
+  Другие аннотации, применимые здесь:
+  @PropertySource используется для загрузки файлов свойств в AC, принимает в качестве аргумента местоположегие.
+   Аналогично <context:property-placeholder> в XML.
+  @Import позволяет импортировать другие класс конфигурации, т.о. можно иметь множество Java-классов конфигурации,
+   например один для бинов DAO, один - для объявление бинов служю и тд.
+  @ComponentScan определяет пакеты, которые Spring должна сканировать на предмет аннотаций для определений бинов.
+   Аналогично <context:component-scan> в XML.
+  @Scope определяет область действия бина
+  @Lazy заставляет Spring создавать экземпляры бина только при его запрашивании. Аналогично lazy-init=true в XML.
+
+Профили - com.kraynov.ch5.profile.*
 
 

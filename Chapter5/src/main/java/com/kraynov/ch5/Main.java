@@ -11,7 +11,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 public class Main {
 
     public static void main(String[] args){
-        System.out.println("\n\nChapter 5 is running");
+        System.out.println("\n\nChapter 5 is running\n\n");
 
         //встроенные редакторы свойств
         GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();

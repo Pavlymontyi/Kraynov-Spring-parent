@@ -3,7 +3,7 @@ package com.kraynov.ch5.javaconfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration //применяется к типу, сообщает платформе Spring о том, что это конфигурационный файл, основанный на java.
 public class AppConfig {
 
     //XML:
