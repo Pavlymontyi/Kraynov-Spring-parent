@@ -1,7 +1,11 @@
 package com.kraynov.ch5;
 
+import com.kraynov.ch5.env.EnvironmentSample;
+import com.kraynov.ch5.env.PlaceHolderSample;
 import com.kraynov.ch5.event.Publisher;
 import com.kraynov.ch5.javaconfig.JavaConfigSimpleExample;
+import com.kraynov.ch5.jsr330.Jsr330Example;
+import com.kraynov.ch5.profile.ProfileXMLConfigExample;
 import com.kraynov.ch5.propeditors.CustomEditorExample;
 import com.kraynov.ch5.propeditors.PropertyEditorBean;
 import com.kraynov.ch5.resource.ResourceDemo;
@@ -38,6 +42,16 @@ public class Main {
 
         //Конфигурирование ApplicationContext в Java-классе
         JavaConfigSimpleExample.main(null);
+
+        //Профили
+        ProfileXMLConfigExample.main(null);
+
+        //Работа с абстракциями Environment и PropertySources
+        EnvironmentSample.main(null);
+        PlaceHolderSample.main(null);
+
+        //JSR330 - DI in JEE6
+        Jsr330Example.main(null);
     }
 
 
