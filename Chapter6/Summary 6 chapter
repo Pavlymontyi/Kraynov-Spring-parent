@@ -69,7 +69,11 @@
   Если целевой метод генерирует исключение, то совет не выполняется. Сигнатура:
          public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
 
- Совет around - имеет
+ Совет around - имеет доступ к цели, аргументам, возвращаемому значению. Является комбинацией предыдущих двух советов.
+  Возможность изменять аргументы, возвращаемое значение, а также возможность вовсе не выполнять исходный метод.
+  Удаленные прокси и управление транзакциями реализована с помощью такого совета.
+         public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+
 
  Использование АОП в Spring
 
