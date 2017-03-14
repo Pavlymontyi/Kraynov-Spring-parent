@@ -38,11 +38,39 @@
    пересобирать приложение.
 
  Архитектура АОП в Spring
-
+   Основана на прокси. При снабжении советом экземпляр класса, движок создает прокси-объект (а для него генерит класс).
+   Этому объекту затем и направляются все вызовы. При получении вызова, он анализирует текущие условия (срез) и
+   свзяывает подходящий совет. Внутренее Spring поддерживает две реализации прокси: динамический прокси JDK и прокси
+   CGLIB. Первая изпользуется по умолчанию, если целевой объект реализует интерфейс. В противном случае CGLIB.
+   В Spring поддерживается только один тип точек соединения - Method Invocation.
+   Аспект в Spring это класс, реализующий интерфейс Advisor. Существуют несколько готовых реализаций. Можно создать свою.
+   Подчиненный интерфейс - PointcutAdvisor. Стандартная реализация - DefaultPointcutAdvisor - конфигурирует со срезом,
+   который по умолчанию включает все методы.
 
  Прокси АОП в Spring
+   Класс ProxyFactory управляет процессом связывания и создания прокси в Spring. Под капотом имеет место цепочка делегирования:
+   ProxyFactory -> DefaultAopProxyFactory -> JdkDynamicAopProxy/Cglib2AopProxy.
+   Платформа Spring поддерживает 6 типов советов, для каждого из них свой интерфейс:
+        Перед               before              org.springframework.aop.MethodBeforeAdvice
+        После возврата      after returning     org.springframework.aop.AfterReturningAdvice
+        После               after finally       org.springframework.aop.AfterAdvice
+        Вместо              around              org.aopalliance.intercept.MethodInterceptor
+        Перехват            throws              org.springframework.aop.ThrowAdvice
+        Введение            introduction        org.springframework.aop.IntroductionInterceptor
 
 
- Использование АОП в SPring
+ Совет before - имеет полный доступ к цели Method Invocation, может менять аргументы, переданные методу, но не имеет
+  контроля выполнения самого метода, как и возвращаемого значения. Сигнатура:
+         public void before(Method method, Object[] objects, Object o) throws Throwable {
+
+ Совет after returning - имеет доступ к цели Method Invocation, аргументам, а также к возвращаемому значению.
+  Изменять аргументы не может, контроля выполнения метода не имеет; изменять возврщаемое значение также не может, но
+  может бросить исключение, которое будет передано наверх.
+  Если целевой метод генерирует исключение, то совет не выполняется. Сигнатура:
+         public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
+
+ Совет around - имеет
+
+ Использование АОП в Spring
 
 
