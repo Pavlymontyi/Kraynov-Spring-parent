@@ -4,6 +4,7 @@ import com.kraynov.ch6.advices.afterreturning.SimpleAfterReturningAdvice;
 import com.kraynov.ch6.advices.around.ProfilerInterceptor;
 import com.kraynov.ch6.advices.before.SimpleBeforeAdvice;
 import com.kraynov.ch6.advices.before.security.SecurityExample;
+import com.kraynov.ch6.advices.throws1.SimpleThrowsAdvice;
 import com.kraynov.ch6.hw.HelloWorldAOPExample;
 
 public class Main {
@@ -23,5 +24,7 @@ public class Main {
         //Создание и использование совета 'around'
         ProfilerInterceptor.main(args);
 
+        //Создание и использование совета 'throws'
+        SimpleThrowsAdvice.main(args);
     }
 }
