@@ -34,7 +34,7 @@
    Для добавления функциональности к цели придется пересобирать все приложение. Реализация - AspectJ.
    AspectJ - аспектно-ориентированное расширение языка Java.
 
-   Динамические реализции АОП (в Spring именно динамическая реализация) напротив производят связывание в рантайме. В
+   Динамические реализации АОП (в Spring именно динамическая реализация) напротив производят связывание в рантайме. В
    Spring это достигается путем создания Proxy. Недостатком является производительность. Преимущество - не надо
    пересобирать приложение.
 
@@ -137,5 +137,64 @@
      public class ControlFlowPointcut implements Pointcut, ClassFilter, MethodMatcher
 
   2) Класс ComposablePointcut применяется для объединения двух и более срезов с помощью таких операций, как union() и
-  intersection()
+  intersection().
+     public class ComposablePointcut implements Pointcut, Serializable
+
+  3) Класс StaticMethodМatcherPointcut служит базовым классом для построения статических срезов. Поскольку класс
+  расширяет класс StaticMethodMatcher (также абстрактный), который реализует интерфейс MethodMatcher, потребуется
+  реализовать метод matches (Method, Class<?>). При необходимости можно переопределить метод ClassFilter getClassFilter()
+     public abstract class StaticMethodMatcherPointcut extends StaticMethodMatcher implements Pointcut
+
+  4) Класс DynamicMethodМatcherPointcut служит базовым классом для построения динамических срезов. Позволяет производить
+  динамические проверки, например проверить значение аргумента.
+  Динамические проверки обеспечивают более высокую гибкость, чем статические проверки, но из-за дополнительных накладных
+  расходов во время выполнения они должны использоваться только в случае абсолютной необходимости.
+     public abstract class DynamicMethodMatcherPointcut extends DynamicMethodMatcher implements Pointcut
+
+  5) С помощью класса NameMatchМethodPointcut можно создать срез, который выполняет простое сопоставление со списком
+  имен методов - часто при создании среза требуется выполнять сопоставление на основе лишь имени метода, игнорируя его
+  сигнатуру и возвращаемый тип. В таком случае можно избежать создания подкласса StaticMethodMatcherPointcut и
+  применять вместо него NameMatchMethodPointcut (подкласс StaticMethodMatcherPointcut) для сопоставления со списком
+  имен методов. Хранит внутри себя List<String> с именами методов.
+     public class NameMatchMethodPointcut extends StaticMethodMatcherPointcut implements Serializable
+  Использование:
+     NameMatchMethodPointcut рc = new NameMatchMethodPointcut();
+     рc.addMethodName("foo");
+     рc.addMethodName("bar");
+
+  6) Класс JdkRegexpMethodPointcut позволяет определять срезы с использованием поддержки регулярных выражений JDK 1.4.
+  Этот класс требует JDK 1.4 или более новой версии. Сожержит два массива паттернов, один на включение, другой на исключение
+     public class JdkRegexpMethodPointcut extends AbstractRegexpMethodPointcut
+  Использование:
+     JdkRegexpMethodPointcut ре = new JdkRegexpMethodPointcut();
+     pc.setPattern(".*foo.*");
+
+  7) Класс AspectJExpressionPointcut повзоляет определять срезы AspectJExpressionPointcut для определения срезов
+  посредством языка выражений AspectJ. При объявлении среза в ХМL-конфигурации с использованием пространства имен аор,
+  либо при определении среза через аннотации @AspectJ, платформа Spring по умолчанию применяет язык срезов AspectJ.
+     public class AspectJExpressionPointcut extends AbstractExpressionPointcut
+     		implements ClassFilter, IntroductionAwareMethodMatcher, BeanFactoryAware {
+  Использование:
+     AspectJExpressionPointcut ре = new AspectJExpressionPointcut();
+     pc.setExpression("execution(* foo*( .. ))"); //совет должен применяться к выполнению любых методов, которые имеют
+                //имена, начинающиеся с foo, принимают любые аргументы и возвращают значение любого типа
+
+  8) Класс AnnotationМatchingPointcut позволяет определять срезы с использованием собственных аннотаций.
+     public class AnnotationMatchingPointcut implements Pointcut
+
+  Чтобы использовать аннотации, нужно определить свою аннотацию, затем пометить ей необходимые методы или классы,
+  затем создать pointcut.
+
+  Использование:
+     //Определяем интерфейс аннотации, используемой для объявления среза
+     @Retention(RetentionPolicy.RUNTIME)
+     @Target({ElementType.TYPE, ElementType.METHOD})
+     puЬlic @interface AdviceRequired {
+     }
+
+     //Далее помечаем нашей аннотацией метод
+     @AdviceRequired
+     public void foo(int х) {
+        System.out.println("Invoked foo() with: " +х);
+     }
 
