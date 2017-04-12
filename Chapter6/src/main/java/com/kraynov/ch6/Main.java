@@ -6,6 +6,7 @@ import com.kraynov.ch6.advices.before.SimpleBeforeAdvice;
 import com.kraynov.ch6.advices.before.security.SecurityExample;
 import com.kraynov.ch6.advices.throws1.SimpleThrowsAdvice;
 import com.kraynov.ch6.hw.HelloWorldAOPExample;
+import com.kraynov.ch6.introductions.IntroductionExample;
 
 public class Main {
 
@@ -26,5 +27,8 @@ public class Main {
 
         //Создание и использование совета 'throws'
         SimpleThrowsAdvice.main(args);
+
+        //Пример, демонстрирующий работы с введениями
+        IntroductionExample.main(args);
     }
 }
