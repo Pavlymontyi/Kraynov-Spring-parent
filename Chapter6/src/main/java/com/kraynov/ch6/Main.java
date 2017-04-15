@@ -5,6 +5,8 @@ import com.kraynov.ch6.advices.around.ProfilerInterceptor;
 import com.kraynov.ch6.advices.before.SimpleBeforeAdvice;
 import com.kraynov.ch6.advices.before.security.SecurityExample;
 import com.kraynov.ch6.advices.throws1.SimpleThrowsAdvice;
+import com.kraynov.ch6.declar.ProxyFactoryBeanExample;
+import com.kraynov.ch6.declar.aspectj.AspectJAnnotationExample;
 import com.kraynov.ch6.hw.HelloWorldAOPExample;
 import com.kraynov.ch6.introductions.IntroductionExample;
 
@@ -30,5 +32,11 @@ public class Main {
 
         //Пример, демонстрирующий работы с введениями
         IntroductionExample.main(args);
+
+        //Декларативное объявление с использованием ProxyFactoryBean
+        ProxyFactoryBeanExample.main(args);
+
+        //Декларативное объявление с использованием аннотаций AspectJ
+        AspectJAnnotationExample.main(args);
     }
 }

@@ -14,7 +14,7 @@
         <module>Chapter6</module>
     </modules>
 
-    <properties>
+    <!--properties>
         <spring-version>3.1.4.RELEASE</spring-version>
     </properties>
     <dependencies>
@@ -33,7 +33,7 @@
             <artifactId>spring-context</artifactId>
             <version>${spring-version}</version>
         </dependency>
-    </dependencies>
+    </dependencies-->
 
     <build>
         <plugins>

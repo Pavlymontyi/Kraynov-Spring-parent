@@ -1,0 +1,19 @@
+package com.kraynov.ch6.declar.aspectj;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component("myBean")
+public class МуВеаn {
+    private MyDependency myDependency;
+    public void execute(){
+        myDependency.foo(100);
+        myDependency.foo(101);
+        myDependency.bar();
+    }
+
+    @Autowired
+    public void setDep(MyDependency myDependency){
+        this.myDependency = myDependency;
+    }
+}
