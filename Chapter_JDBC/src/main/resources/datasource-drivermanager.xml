@@ -13,8 +13,8 @@
       class="org.springframework.jdbc.datasource.DriverManagerDataSource"
       p:driverClassName="${jdbc.driverClassName}"
       p:url="${jdbc.url}"
-      p:username="${jdЬc.username}"
+      p:username="${jdbc.username}"
       p:password="${jdbc.password}"/>
-    <context:property-placeholder location="classpath:META-INF/config/jdbc.properties"/>
+    <context:property-placeholder location="jdbc.properties"/>
 
 </beans>

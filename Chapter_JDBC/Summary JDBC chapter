@@ -8,5 +8,52 @@
  Инфраструктура JDBC в Spring
   Для управления подключением к базе данных можно использовать платформу Spring, определив бин, который реализует
   интерфейс javax.sql.DataSource. Внутри DataSource предоставляет и управляет набором реализаций Connection.
+
   Простейшей реализацией DataSource в spring является DriverManagerDataSource, но так как он не поддерживает даже пул
-  соединений (тупо получает от драйвера Connection), то класс подходит только для тестовых целей.
+  соединений (тупо получает от драйвера Connection), то класс подходит только для тестовых целей. (эта реализация
+  используется в конфигурации datasource-drivermanager.xml).
+  В реальных приложениях можно использовать другую реализацию org.apache.commons.dbcp.BasicDataSource, либо использовать
+  реализацию, предоставляемую сервером приложений JEE(например,JBoss, WebSphere, Weblogic или GlassFish), который может
+  дополнительно увеличить производительность приложения.
+  Другой способ конфигурирования бина dataSource предусматривает использование JNDI. Если разрабатываемое приложение
+  должно выполняться в контейнере JEE, можно извлечь преимущества от пула подключений, управляемого контейнером.
+
+  Поддержка встроенной базы данных
+  <beans ...
+         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+           xsi:schemaLocation="http://www.springframework.org/schema/jdbc
+                               http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <jdbc:embedded-database id="dataSource" type="H2">
+        <jdbc:script location="classpath:META-INF/sql/schema.sql"/>
+        <jdbc:script location="classpath:META-INF/sql/test-data.sql"/>
+    </jdbc:embedded-database>
+
+  Обработка исключений
+  Поскольку в Spring рекомендуется использовать исключения времени выполнения,а не проверяемые исключения, необходим
+  механизм трансляции проверяемого исключения SQLException в исключение времени выполнения Spring JDBC.
+  Платформа Spring предоставляет стандартную реализацию интерфейса SQLExceptionTranslator, которая берет на себя
+  обязанности по трансляции обобщенных кодов ошибок SQL в исключения Spring JDBC. Можно унаследоваться от нее в случае,
+  если нужно переопределить его поведение:
+    public class KraynovSQLErrorCodesTranslator extends SQLErrorCodeSQLExceptionTranslator {
+
+  Класс JdbcTemplate
+  Этот класс представляет ядро поддержки JOBC в Spring. Он способен выполнять все типы SQL-операторов: DDL, DML, select
+  и тд. Класс JdbcTemplate позволяет отправлять базе данных SQL-oпepaтop любого типа и возвращать результат также любого
+  типа.
+  Note: В Sрriпg-модуле Jdbc имеется класс по имени JdbcDaoSupport. Он является оболочкой для класса JdbcTemplate и
+  классы DAO могут расширять класс JdbcDaoSupport. В этом случае после внедрения такого класса DAO с источником данных
+  экземпляр JdbcTemplate будет инициализирован автоматически.
+  Пример использования экземпляра JdbcTemplate:
+        jdbcTemplate.queryForObject("select first_name from contact where id = ?", new Object[]{id}, String.class);
+  Параметры передаются через массив Object, причем порядок следования параметров должен совпадать с порядком следования
+  знаков ? в теле sql-запроса. Можно использовать именованные параметры. Соответствующую поддержку в Spring обеспечивает
+  разновидность класса JdbcTemplate по имени NamedParameterJdbcTemplate.
+  Пример использования:
+        String sql = "select last_name from contact where id = :contactld";
+        Map<String, Object> namedParameters = new HashMap<String, Object>();
+        namedParameters.put("contactld", id);
+        return namedJdbcTemplate.queryForObject(sql, namedParameters, String.class);
+
+
+
