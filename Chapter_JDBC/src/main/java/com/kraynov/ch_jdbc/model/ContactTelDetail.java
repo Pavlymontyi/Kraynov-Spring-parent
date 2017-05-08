@@ -1,4 +1,4 @@
-package com.kraynov.ch_jdbc;
+package com.kraynov.ch_jdbc.model;
 
 import java.io.Serializable;
 

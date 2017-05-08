@@ -55,5 +55,54 @@
         namedParameters.put("contactld", id);
         return namedJdbcTemplate.queryForObject(sql, namedParameters, String.class);
 
+  Извлечение объектов предметной области с помощью RowМapper<T>
+  Унаследовав класс RowMapper и реализовав метод mapRow, можно использовать полученный класс для трансформации результатов
+  запроса из объекта ResultSet в pojo-объекты предметной области.
+         private static final class ContactMapper implements RowMapper<Contact>{
+            @Override
+            public Contact mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Contact contact = new Contact();
+                contact.setId(rs.getLong("id"));
+                ...
+                return contact;
+            }
+         }
 
+  Затем передавать экзмпляр этого класса метод query объекта JdbcTemplate:
+    namedParameterJdЬcTemplate.query(sql, new ContactMapper());
+
+  Начиная с java8, можно даже не реализовывать класс, а использовать лямбда-выражение.
+    namedJdbcTemplate.query(sql, (rs, rowNum) -> {
+                ...
+            });
+
+  Извлечение вложенных объектов предметной области с помощью ResultSetExtractor
+  Интерфейс RowMapper<T> подходит только для отображения строки на одиночный объект предметной области. Для более сложной
+  объектной структуры должен использоваться интерфейс ResultSetExtractor. Аналогично RowMapper.
+        public interface ResultSetExtractor<T> {
+            T extractData(ResultSet var1) throws SQLException, DataAccessException;
+        }
+
+  Классы Spring, моделирующие операции JDBC
+  MappingSqlQuery<T>. Класс MappingSglQuery<T> позволяет поместить и строку запроса и метод mapRow() в объект единого класса
+  SqlUpdate. Класс SglUpdate позволяет поместить внутрь себя любой SQL oпepaтop обновления. Он также предоставляет множество
+  полезных функций для привязки SQL-параметров, извлечения сгенерированного СУРБД ключа после вставки новой записи и т.д.
+  SqlFunction<T>. Класс SqlFunction<T> позволяет вызывать хранимые функции в базе данных с арrументами и возвращаемым типом.
+  Существует еще один класс, StoredProcedure, который помогает вызывать хранимые процедуры.
+  BatchSqlUpdate - Для пакетных операций используется класс BatchSqlUpdate.
+
+  Настройка DАО-классов JDBC с использованием аннотаций
+  DAO-класс снабжается аннотацией @Repository для объявления бина Spring по имени contactDao, и поскольку класс содержит код
+  доступа к данным, @Repository также инструктирует Spring о необходимости транслировать исключения SQL, специфичные для
+  базы данных, в более дружественную к приложению иерархию DataAccessException, поддерживаемую платформой. К свойству
+  dataSource применяется аннотация @Resource стандарта JSR-250.
+
+  @Repository("contactDao")
+  public class JdbcContactDAO implements ContactDAO {
+      private DataSource dataSource;
+      @Resource(name="dataSource")
+      public void setDataSource(DataSource dataSource) {
+          this.dataSource = dataSource;
+      }
+  }
 

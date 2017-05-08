@@ -1,4 +1,4 @@
-package com.kraynov.ch_jdbc;
+package com.kraynov.ch_jdbc.common;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DeadlockLoserDataAccessException;

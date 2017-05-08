@@ -1,7 +1,8 @@
-package com.kraynov.ch_jdbc;
+package com.kraynov.ch_jdbc.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Contact implements Serializable{
@@ -11,6 +12,11 @@ public class Contact implements Serializable{
     private String lastName;
     private Date birthDate;
     private List<ContactTelDetail> contactTelDetails;
+
+    public Contact() {
+        super();
+        contactTelDetails = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;
@@ -54,12 +60,16 @@ public class Contact implements Serializable{
 
     @Override
     public String toString() {
+        StringBuilder details = new StringBuilder();
+        for(ContactTelDetail detail : contactTelDetails){
+            details.append("  ").append(detail);
+        }
         return "Contact{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthDate=" + birthDate +
-                ", contactTelDetails=" + contactTelDetails +
-                '}';
+                ", contactTelDetails=" + details +
+                "}";
     }
 }
