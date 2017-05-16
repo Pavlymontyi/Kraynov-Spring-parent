@@ -24,6 +24,7 @@
         <processorPath useClasspath="true" />
         <module name="Chapter5" />
         <module name="Chapter6" />
+        <module name="Chapter8" />
         <module name="Chapter_JDBC" />
         <module name="HelloWorld" />
       </profile>
@@ -31,6 +32,7 @@
     <bytecodeTargetLevel>
       <module name="Chapter5" target="1.7" />
       <module name="Chapter6" target="1.7" />
+      <module name="Chapter8" target="1.8" />
       <module name="Chapter_JDBC" target="1.8" />
       <module name="HelloWorld" target="1.7" />
       <module name="Kraynov-Spring-parent" target="1.7" />

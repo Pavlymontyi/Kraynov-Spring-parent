@@ -1,0 +1,125 @@
+Общее описание
+  Hibernate - библиотека, предназначенная для решения задач ORM.
+  Позволяет упростить написание логики отображения сущностей бд в java-обеъкты. Популярность обусловлена использованием
+  POJO (в отличие от, например, EJB-бинов в JEE), а также возможностью моделировать сложные отношения.
+  Начиная с версии 3.2, Hibernate предоставляет реализацию JPA (JPA - набор спецификаций, java-интерфейсов и java-аннотаций).
+  В то же время, в Hibernate имеется свой API, поэтому можно использовать и его.
+
+  При определении ORM-отображений Hib поддерживает два подхода.
+  Первый подход подразумевает генерирование объектное модели в java, на основе которой hibernate сгенерирует скрипты для бд.
+  Второй подход подразумевает создание схемы и таблиц в бд, а затем отобразить схему на классы в java.
+
+Аннотации в классах, используемые Hibernate-движком.
+  @Entity - помечается класс, обозначая его как entity-класс.
+  @Table(name="contact") - определяет имя таблицы в базе данных, на которую отображается эта сущность.
+  @Column(name="id") - помечается getter. Определяет имя стольца в таблице, на который отображается свойство.
+  @Id - помечается getter свойства, которое представляет собой первичный ключ.
+  @GeneratedValue(strategy = GenerationType.IDENTITY) - помечается getter. Аноотация сообщает hibernate каким образом
+  было сгенерировано значение. GenerationType.IDENTITY означает, что значение было сгенерировано СУБД во время вставки.
+  @Version - помечается getter. Используется для механизма оптимистичной блокировки.
+  @Temporal(TemporalType.DATE) - помечается getter для Date своейств. Обеспечивает возможность замапить java.sql.Date на
+  java.util.Date.
+
+ Заметка: Оптимистическая блокировка не ограничивает модификацию обрабатываемых данных сторонними сессиями, однако перед началом
+  предполагаемой модификации запрашивает значение некоторого выделенного атрибута каждой из строк данных. Перед записью
+  модификаций в базу данных перепроверяется значение выделенного атрибута, и если оно изменилось, то транзакция откатывается
+  или применяются различные схемы разрешения коллизий. Если значение выделенного атрибута не изменилось —
+  производится фиксация модификаций с одновременным изменением значения выделенного атрибута (например, инкрементом) для
+  сигнализации другим сессиям о том, что данные изменились.
+
+Аннотации в классах для моделирования отношений.
+  @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  Помечается getter в классе.
+  Атрибут mappedBy указывает свойство в связываемом классе (ContactTelDetail.contact), соответсвующее внешнему ключу.
+  Атрибут cascade указывает на то, что операция обновления должна распространиться на дочерние записи.
+  Атрибут orphanRemoval указывает, нужно ли удалять записи, оставшиеся без внешнего ключа - ContactTelDetail, которые были
+  исключены из коллекции-свойства.
+  Атрибут fetch указывает на то, лениво или нет подгружать дочерние записи. По умолчанию - лениво.
+
+  @ManyToOne
+  Помечается геттер в классе, представляющем другую сторону ассоциации.
+  Также необходимо помечать геттер анотацией @JoinColumn(name = "contact_id"), с указанием имени столбца внешнего ключа.
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  Помечается геттер в классе.
+  Также необходимо помечать геттер аннотацией
+  @JoinTable(name = "CONTACT_HOBBY_DETAIL",
+        joinColumns = @JoinColumn(name = "CONTACT_ID"),
+        inverseJoinColumns = @JoinColumn(name = "HOBBY_ID"))
+  Она указывает на таблицу, в которой хранятся ассоцииации многие-ко-многим, а так же на столбец-ключ в текущую таблицу
+  (joinColumns) и на столбец-ключ во внешнюю таблицу (inverseJoinColumns).
+  Для свойства класса, представляющем другую сторону ассоциации необходимо пометить теми же аннотациями, но обратить
+  joinColumns и inverseJoinColumns.
+
+Конфигурирование фабрики сеансов
+  Интерфейс org.hibernate.Session обеспечивает базовую функциональность доступа к данным, позволяя сохранять, обновлять,
+  удалять и загружать объекты в/из базы данных. Именно через интерфейс Session прикладные объекты DAO будут выполнять
+  все операции с хранилищем данных. Стандартный способ получить реализацию этого интерфейса - обратиться к реализации
+  org.hibernate.SessionFactory. Получить реалиацию SessionFactory в Spring можно путем конфигурирования бина со свойствами.
+  Этот бин затем будет использоваться в реализациях DAO. Конфигурация такого бина:
+      <bean id="sessionFactory"
+            class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+            p:dataSource-ref="dataSource"
+            p:packagesToScan="com.kraynov.ch8.model"
+            p:hibernateProperties-ref="hibernateProperties"/>
+
+  Также необходимо сконфигурировать бин transactionManager для управления транзакционностью.
+  Платформа Spring предоставляет диспетчер транзакций, специфичный для Hibernate 4 (org.springframework.orm.hibernate4.
+  HibernateTransactionManager). Бин объявлен с идентификатором transactionManager. По умолчанию всегда, когда требуется
+  диспетчер транзакций, Spring будет искать внутри ApplicationContext бин с именем transactionManager.
+      <bean id="transactionManager"
+                class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+                p:sessionFactory-ref="sessionFactory"/>
+      <tx:annotation-driven/>
+
+DAO
+  После внедрения бина sessionFactory в класс DAO, все готово для работы с данными - DAO-класс будет направлять запросы
+  session, получаемой из sessionFactory:
+      return sessionFactory.getCurrentSession().createQuery("from Contact c").list();
+      return sessionFactory.getCurrentSession().getNamedQuery("Contact.findAllWithDetail").list();
+
+  Запросы в приведенм примере написаны на языке HQL(Hibernate Query Language).
+  Отличие между HQL и SQL состоит в том, что SQL работает
+  таблицами в БД и их столбацами, а HQL – с сохраняемыми объектами (Persistent Objects) и их полями (аттрибутами класса).
+  Hibernate транслирует HQL–запросы в понятные для БД SQL–запросы, которые и выполняют необходимые нам действия в БД.
+  Поскольку нет контроля над генерируемыми SQL-операторами, то нужно тщательно определять отображения, особенно
+  ассоциации и связанную с ними стратегию выборки. Также рекомендуется логировать sql, которые генерирует Hibernate,
+  чтобы удостовериться в их корректном поведении.
+
+  Интерфейс session предоставляет также возможность создавать sql-запросы, а также API методы для удаления, вставки и
+  модификации строк в таблице:
+      @Transactional(readOnly=true)
+      public ContactTelDetail findContactTelDetailById(Long id) {
+          return (ContactTelDetail) sessionFactory.getCurrentSession().
+                  createSQLQuery("select * from CONTACT_TEL_DETAIL where id=:id").setParameter("id", id).uniqueResult();
+      }
+      @Override
+      public Contact save(Contact contact) {
+          sessionFactory.getCurrentSession().saveOrUpdate(contact);
+          LOG.info("Contact saved with id: " + contact.getId());
+          return contact;
+      }
+
+      @Override
+      public void delete(Contact contact) {
+          sessionFactory.getCurrentSession().delete(contact);
+          LOG.info("Contact deleted with id: " + contact.getId());
+      }
+
+  Note: Методы DAO можно помечать аннотацией @Transactional(readOnly=true). Это означает, что транзакция должна быть
+  установлена как предназначенная только для чтения. Установка этого атрибута для методов, производящих только чтение,
+  обеспечит более высокую производительность.
+
+LazyinitializationException-проблема.
+  В случае попытки загрузить сущность с ее связями, получаем LazyinitializationException, потому что hibernate по умолчанию
+  прогружает связи лениво (генерятся прокси, которые хранятся в Set<ContactTelDetail>). В базу данных hibernate обратится
+  только в момент, когда связанные сущности кто-то напрямую затребует. Но так как hibernate-сессии в этот момент уже нет,
+  то мы получаем exception. Решить проблему можно двумя способами.
+  Первый - указать fetch = FetchType.EAGER. В этом случае не будет ленивой инициализации в принципе. Рискуем загрузить
+  полбазы например в кейсе иерархии сущностей в таблице (parent-child).
+  Второй - использовать операцию fetch в HQL. Пример:
+        "select distinct c from Contact c left join fetch c.contactTelDetails t " +
+                                        "left join fetch c.hobbies h"
+  Конструкция left join fetch сообщает Hibernate о необходимости незамедлительно произвести выборку ассоциации. Также
+  должна использоваться конструкция select distinct, иначе Hibernate возвратит дублированные объекты (например, если
+  какой-то контакт имеет два телефона, будут возвращены два объекта Contact).
