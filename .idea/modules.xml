@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/Chapter6/Chapter6.iml" filepath="$PROJECT_DIR$/Chapter6/Chapter6.iml" />
       <module fileurl="file://$PROJECT_DIR$/Chapter8/Chapter8.iml" filepath="$PROJECT_DIR$/Chapter8/Chapter8.iml" />
       <module fileurl="file://$PROJECT_DIR$/Chapter_JDBC/Chapter_JDBC.iml" filepath="$PROJECT_DIR$/Chapter_JDBC/Chapter_JDBC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DepositsApplication/DepositsApplication.iml" filepath="$PROJECT_DIR$/DepositsApplication/DepositsApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/HelloWorld/HelloWorld.iml" filepath="$PROJECT_DIR$/HelloWorld/HelloWorld.iml" />
       <module fileurl="file://$PROJECT_DIR$/Kraynov-Spring-parent.iml" filepath="$PROJECT_DIR$/Kraynov-Spring-parent.iml" />
     </modules>

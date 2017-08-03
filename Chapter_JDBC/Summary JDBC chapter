@@ -38,7 +38,7 @@
     public class KraynovSQLErrorCodesTranslator extends SQLErrorCodeSQLExceptionTranslator {
 
   Класс JdbcTemplate
-  Этот класс представляет ядро поддержки JOBC в Spring. Он способен выполнять все типы SQL-операторов: DDL, DML, select
+  Этот класс представляет ядро поддержки JDBC в Spring. Он способен выполнять все типы SQL-операторов: DDL, DML, select
   и тд. Класс JdbcTemplate позволяет отправлять базе данных SQL-oпepaтop любого типа и возвращать результат также любого
   типа.
   Note: В Sрriпg-модуле Jdbc имеется класс по имени JdbcDaoSupport. Он является оболочкой для класса JdbcTemplate и
