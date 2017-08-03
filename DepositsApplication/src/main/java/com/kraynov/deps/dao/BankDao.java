@@ -8,7 +8,7 @@ public interface BankDao {
 
     List<Bank> findAll();
     Bank findById(Long id);
-    Bank findByName(Long id);
+    Bank findByName(String bankName);
     Bank save(Bank contact);
     void delete(Bank contact);
 
