@@ -45,7 +45,7 @@ ContextLoaderListener), либо ручной - через xml, через Java-
 XML - добавляется тег property и либо ref либо value - первый для бинов, второй для небинов:
 <bean id="messageRenderer" class="com.kraynov...." />
         <property name="messageProvider">
-        <ref bean="messageProvider"/>
+            <ref bean="messageProvider"/>
         </property>
 </bean>
 Аннотации - сеттер помечается аннотацией @Autowired либо @Resource(name="messageProvider"):
