@@ -112,6 +112,11 @@ public class JdbcContactDAO implements ContactDAO, InitializingBean {
     }
 
     @Override
+    public void insertWithDetail(Contact contact) {
+
+    }
+
+    @Override
     public void delete(Contact contact) {
 
     }

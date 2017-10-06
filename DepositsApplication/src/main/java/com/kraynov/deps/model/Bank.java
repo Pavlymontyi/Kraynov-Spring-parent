@@ -5,7 +5,11 @@ import javax.persistence.*;
 @Entity
 @Table(name="BANKS")
 @NamedQueries(
-        @NamedQuery(name = "Bank.findAll", query = "select distinct b from Bank b")
+    {
+        @NamedQuery(name = "Bank.findAll", query = "select distinct b from Bank b"),
+        @NamedQuery(name = "Bank.findById", query = "select distinct b from Bank b where b.id=:id"),
+        @NamedQuery(name = "Bank.findByName", query = "select distinct b from Bank b where b.name=:name")
+    }
 )
 public class Bank {
     private Long       id;

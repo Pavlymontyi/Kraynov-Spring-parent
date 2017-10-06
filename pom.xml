@@ -14,6 +14,7 @@
         <module>Chapter6</module>
         <module>Chapter_JDBC</module>
         <module>Chapter8</module>
+        <module>DepositsWeb</module>
         <module>DepositsApplication</module>
     </modules>
 

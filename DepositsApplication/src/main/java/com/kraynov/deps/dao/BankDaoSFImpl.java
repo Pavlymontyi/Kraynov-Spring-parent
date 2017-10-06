@@ -1,7 +1,9 @@
 package com.kraynov.deps.dao;
 
 import com.kraynov.deps.model.Bank;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.NamedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +31,15 @@ public class BankDaoSFImpl implements BankDao{
 
     @Transactional(readOnly=true)
     public Bank findById(Long id) {
-        throw new UnsupportedOperationException("not implemented yet");
+        Query hibernateQuery = sessionFactory.getCurrentSession().getNamedQuery("Bank.findById");
+        hibernateQuery.setParameter("id", id);
+        return (Bank) hibernateQuery.uniqueResult();
     }
 
     @Transactional(readOnly=true)
-    public Bank findByName(Long id) {
-        throw new UnsupportedOperationException("not implemented yet");
+    public Bank findByName(String bankName) {
+        return (Bank) sessionFactory.getCurrentSession().getNamedQuery("Bank.findByName")
+                .setParameter("name", bankName).list().iterator().next();
     }
 
     @Override
